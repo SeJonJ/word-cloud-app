@@ -87,7 +87,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
     
     // 툴팁이 화면 밖으로 나가지 않도록 위치 조정
     tooltip
-      .html(`<strong>${word.text}:</strong> ${word.value}개`)
+      .html(`<strong>${word.text}:</strong> ${word.value}개<br><span style="font-size: 0.8em; opacity: 0.8;">(클릭하여 구글에서 검색)</span>`)
       .style('visibility', 'visible')
       .style('opacity', '1');
     
@@ -133,11 +133,20 @@ const WordCloud: React.FC<WordCloudProps> = ({
       // 확대 효과를 위한 스케일 계산
       const scale = isHovered ? 1.2 : 1;
       
+      // 구글 검색 핸들러
+      const handleWordClick = (text: string) => {
+        // 구글 검색 URL 생성
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
+        // 새 탭에서 URL 열기
+        window.open(searchUrl, '_blank', 'noopener,noreferrer');
+      };
+      
       return (
         <g 
           key={wordId}
           onMouseMove={(e) => showTooltip(e, word, wordId)}
           onMouseOut={hideTooltip}
+          onClick={() => handleWordClick(word.text)}
           className="word-group"
           transform={`translate(${word.x},${word.y}) rotate(${word.rotate}) scale(${scale})`}
         >
@@ -176,6 +185,12 @@ const WordCloud: React.FC<WordCloudProps> = ({
     styleElement.innerHTML = `
       .word-group {
         transition: transform 0.2s ease-out;
+      }
+      .word-text {
+        cursor: pointer;
+      }
+      .word-text:active {
+        filter: brightness(0.8);
       }
     `;
     document.head.appendChild(styleElement);
