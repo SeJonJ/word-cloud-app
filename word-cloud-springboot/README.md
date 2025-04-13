@@ -79,3 +79,20 @@ src/main/java/com/wordcloud/
 ├── Config/           # 설정 클래스
 └── WordCloudApplication.java  # 메인 애플리케이션
 ```
+
+## application.properties
+```application.properties
+# Server Configuration
+server.port=8080
+
+# Application Configuration
+spring.application.name=word-cloud
+
+# Naver API Configuration
+naver.api.search-url=https://openapi.naver.com/v1/search/blog.json?query=
+naver.api.client-id={api 클라이언트 id}
+naver.api.client-secret={api 시크릿 아이디}
+
+# Logging Configuration
+logging.level.com.wordcloud=DEBUG
+```
