@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { WordCloudProps, WordCloudConfig } from './types';
 import { useWordCloud } from './useWordCloud';
 import Controls from './Controls';
+import ExportButton from './ExportButton';
 import { DEFAULT_DIMENSIONS } from './constants';
 import * as d3 from 'd3';
 
@@ -184,6 +185,13 @@ const WordCloud: React.FC<WordCloudProps> = ({
     };
   }, []);
 
+  // 검색 키워드 추출 (words 배열에서 가장 빈도가 높은 단어)
+  const topKeyword = useMemo(() => {
+    if (!words || words.length === 0) return 'wordcloud';
+    // 빈도수 기준으로 정렬하여 가장 높은 단어 반환
+    return [...words].sort((a, b) => b.value - a.value)[0]?.text || 'wordcloud';
+  }, [words]);
+
   return (
     <div ref={containerRef} className="relative w-full h-full">
       {/* D3 스타일 툴팁 */}
@@ -205,17 +213,20 @@ const WordCloud: React.FC<WordCloudProps> = ({
 
       {/* 설정 컨트롤 패널 - Portal을 통해 body에 직접 렌더링 */}
       {isMounted && createPortal(
-        <Controls
-          config={config}
-          position={controlPosition}
-          onMinFontSizeChange={handleChange('minFontSize')}
-          onMaxFontSizeChange={handleChange('maxFontSize')}
-          onPaddingChange={handleChange('padding')}
-          onColorThemeChange={handleChange('colorTheme')}
-          onShapeChange={handleChange('shape')}
-          onRotationModeChange={handleChange('rotationMode')}
-          onRotationAngleChange={handleChange('rotationAngle')}
-        />,
+        <>
+          <Controls
+            config={config}
+            position={controlPosition}
+            onMinFontSizeChange={handleChange('minFontSize')}
+            onMaxFontSizeChange={handleChange('maxFontSize')}
+            onPaddingChange={handleChange('padding')}
+            onColorThemeChange={handleChange('colorTheme')}
+            onShapeChange={handleChange('shape')}
+            onRotationModeChange={handleChange('rotationMode')}
+            onRotationAngleChange={handleChange('rotationAngle')}
+          />
+          <ExportButton svgRef={svgRef} containerRef={containerRef} searchKeyword={topKeyword} />
+        </>,
         document.body
       )}
     </div>
