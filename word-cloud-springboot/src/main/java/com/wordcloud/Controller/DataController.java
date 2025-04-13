@@ -1,6 +1,6 @@
 package com.wordcloud.Controller;
 
-import com.wordcloud.dto.response.WordCloudResponse;
+import com.wordcloud.model.response.WordCloudResponse;
 import com.wordcloud.service.NaverParsing;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.wordcloud.dto.response;
+package com.wordcloud.model.response;
 
 import lombok.Builder;
 import lombok.Getter;

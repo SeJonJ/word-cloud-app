@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { WordCloudProps, WordCloudConfig } from './types';
 import { useWordCloud } from './useWordCloud';
 import Controls from './Controls';
@@ -19,8 +20,8 @@ const WordCloud: React.FC<WordCloudProps> = ({
   const widthPx = typeof width === 'number' ? width : Number(width);
   const heightPx = typeof height === 'number' ? height : Number(height);
   
-  // 컨트롤 패널 위치 상태 관리
-  const [controlPosition, setControlPosition] = useState<'left' | 'right'>('right');
+  // 컨트롤 패널은 항상 오른쪽 하단에 고정
+  const controlPosition = 'right';
   // 툴팁 관련 ref
   const tooltipRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,15 @@ const WordCloud: React.FC<WordCloudProps> = ({
     handleConfigChange,
     svgRef
   } = useWordCloud(words, widthPx, heightPx, shape);
+
+  // Portal을 사용하기 위한 state
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // 컴포넌트가 마운트된 후에 Portal 활성화
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   // 툴팁 기능 설정
   useEffect(() => {
@@ -158,11 +168,6 @@ const WordCloud: React.FC<WordCloudProps> = ({
     };
   }, [handleConfigChange]);
 
-  // 컨트롤 패널 위치 변경
-  const toggleControlPosition = () => {
-    setControlPosition(prev => prev === 'left' ? 'right' : 'left');
-  };
-
   // 전역 CSS 스타일 추가
   useEffect(() => {
     // SVG 텍스트 요소의 호버 효과를 위한 스타일
@@ -179,25 +184,8 @@ const WordCloud: React.FC<WordCloudProps> = ({
     };
   }, []);
 
-  // 방향 아이콘 경로 결정
-  const directionIconPath = controlPosition === 'left'
-    ? "M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
-    : "M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z";
-
   return (
     <div ref={containerRef} className="relative w-full h-full">
-      {/* 컨트롤 패널 위치 토글 버튼 */}
-      <button 
-        onClick={toggleControlPosition}
-        className="absolute top-4 right-4 z-10 bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-colors"
-        aria-label="컨트롤 패널 위치 변경"
-        title="컨트롤 패널 위치 변경"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d={directionIconPath} />
-        </svg>
-      </button>
-      
       {/* D3 스타일 툴팁 */}
       <div ref={tooltipRef} className="d3-tooltip"></div>
       
@@ -215,18 +203,21 @@ const WordCloud: React.FC<WordCloudProps> = ({
         </g>
       </svg>
 
-      {/* 설정 컨트롤 패널 */}
-      <Controls
-        config={config}
-        position={controlPosition}
-        onMinFontSizeChange={handleChange('minFontSize')}
-        onMaxFontSizeChange={handleChange('maxFontSize')}
-        onPaddingChange={handleChange('padding')}
-        onColorThemeChange={handleChange('colorTheme')}
-        onShapeChange={handleChange('shape')}
-        onRotationModeChange={handleChange('rotationMode')}
-        onRotationAngleChange={handleChange('rotationAngle')}
-      />
+      {/* 설정 컨트롤 패널 - Portal을 통해 body에 직접 렌더링 */}
+      {isMounted && createPortal(
+        <Controls
+          config={config}
+          position={controlPosition}
+          onMinFontSizeChange={handleChange('minFontSize')}
+          onMaxFontSizeChange={handleChange('maxFontSize')}
+          onPaddingChange={handleChange('padding')}
+          onColorThemeChange={handleChange('colorTheme')}
+          onShapeChange={handleChange('shape')}
+          onRotationModeChange={handleChange('rotationMode')}
+          onRotationAngleChange={handleChange('rotationAngle')}
+        />,
+        document.body
+      )}
     </div>
   );
 };

@@ -19,15 +19,10 @@ const Controls: React.FC<WordCloudControls> = ({
   // readonly 배열을 변환
   const rotationModes: RotationMode[] = ['none', 'random', 'degrees'];
   
-  // 위치에 따른 클래스 설정
-  const positionClass = position === 'left' 
-    ? 'left-4' 
-    : 'right-4';
-  
   return (
     <div 
-      className={`fixed bottom-4 ${positionClass} bg-black/20 backdrop-blur-md rounded-lg shadow-lg text-white
-                  max-h-[90vh] overflow-y-auto transition-all duration-300 z-10
+      className={`fixed bottom-4 right-4 bg-black/20 backdrop-blur-md rounded-lg shadow-lg text-white
+                  max-h-[90vh] overflow-y-auto transition-all duration-300 z-50
                   ${isCollapsed ? 'w-12 p-2' : 'w-[280px] p-4'}`}
     >
       {/* 접기/펼치기 버튼 */}
