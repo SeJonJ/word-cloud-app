@@ -21,7 +21,7 @@ const Controls: React.FC<WordCloudControls> = ({
   
   return (
     <div 
-      className={`fixed bottom-4 right-4 bg-black/20 backdrop-blur-md rounded-lg shadow-lg text-white
+      className={`fixed bottom-4 right-4 bg-black/20 dark:bg-white/20 backdrop-blur-md rounded-lg shadow-lg text-black dark:text-white
                   max-h-[90vh] overflow-y-auto transition-all duration-300 z-50
                   ${isCollapsed ? 'w-12 p-2' : 'w-[280px] p-4'}`}
     >
@@ -29,7 +29,7 @@ const Controls: React.FC<WordCloudControls> = ({
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)}
         className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center 
-                  bg-black/30 hover:bg-black/50 rounded-full transition-colors"
+                  bg-black/30 dark:bg-white/30 hover:bg-black/50 dark:hover:bg-white/50 rounded-full transition-colors"
         title={isCollapsed ? "설정 패널 열기" : "설정 패널 닫기"}
       >
         {isCollapsed ? (
@@ -105,8 +105,8 @@ const Controls: React.FC<WordCloudControls> = ({
                   onClick={() => onColorThemeChange(theme)}
                   className={`px-3 py-1 rounded capitalize ${
                     config.colorTheme === theme
-                      ? 'bg-white text-black'
-                      : 'bg-black/20 hover:bg-black/30'
+                      ? 'bg-white dark:bg-gray-800 text-black dark:text-white'
+                      : 'bg-black/20 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/30'
                   }`}
                 >
                   {theme}
@@ -124,8 +124,8 @@ const Controls: React.FC<WordCloudControls> = ({
                   onClick={() => onShapeChange(shape)}
                   className={`px-3 py-1 rounded capitalize ${
                     config.shape === shape
-                      ? 'bg-white text-black'
-                      : 'bg-black/20 hover:bg-black/30'
+                      ? 'bg-white dark:bg-gray-800 text-black dark:text-white'
+                      : 'bg-black/20 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/30'
                   }`}
                 >
                   {shape}
@@ -144,8 +144,8 @@ const Controls: React.FC<WordCloudControls> = ({
                   onClick={() => onRotationModeChange(mode)}
                   className={`px-3 py-1 rounded capitalize ${
                     config.rotationMode === mode
-                      ? 'bg-white text-black'
-                      : 'bg-black/20 hover:bg-black/30'
+                      ? 'bg-white dark:bg-gray-800 text-black dark:text-white'
+                      : 'bg-black/20 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/30'
                   }`}
                 >
                   {mode === 'none' ? 'None' : 
