@@ -20,14 +20,18 @@ const ExportButton: React.FC<ExportButtonProps> = ({ svgRef, containerRef, searc
   // 파일명 생성 함수
   const generateFileName = (format: string) => {
     // 검색 키워드에서 파일명에 적합하지 않은 문자 제거 및 짧게 만들기
-    const keyword = searchKeyword
+    const cleanKeyword = searchKeyword
       .trim()
       .replace(/[^\w\s-]/g, '')  // 특수문자 제거
       .replace(/\s+/g, '-')      // 공백을 하이픈으로 변경
       .substring(0, 30);         // 최대 30자로 제한
     
     const date = new Date().toISOString().slice(0, 10);
-    return `wordcloud-${keyword}-${date}.${format}`;
+    
+    // 정제된 검색어가 빈 문자열이면 기본값 사용
+    return cleanKeyword 
+      ? `wordcloud-${cleanKeyword}-${date}.${format}` 
+      : `wordcloud-${date}.${format}`;
   };
 
   // PNG로 내보내기 - SVG 직접 사용
